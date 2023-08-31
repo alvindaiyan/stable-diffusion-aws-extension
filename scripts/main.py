@@ -252,6 +252,7 @@ class SageMakerUI(scripts.Script):
                 return str(obj)
 
         selected_script_index = p.script_args[0] - 1
+        selected_script_name = p.scripts.selectable_scripts[selected_script_index].name
         api_param.script_args = []
         for sid, script in enumerate(p.scripts.scripts):
             # escape sagemaker plugin
@@ -268,7 +269,7 @@ class SageMakerUI(scripts.Script):
                     parsed_args, used_models = self._process_args_by_plugin(script.name, arg, _id, script_args)
                     all_used_models.append(used_models)
                     api_param.alwayson_scripts[script.name]['args'].append(parsed_args)
-            elif selected_script_index == sid:
+            elif selected_script_name == script.name:
                 api_param.script_name = script.name
                 for _id, arg in enumerate(script_args):
                     parsed_args, used_models = self._process_args_by_plugin(script.name, arg, _id, script_args)
@@ -440,7 +441,8 @@ class SageMakerUI(scripts.Script):
         self.default_images_inner = default_processing.process_images_inner
         processing.process_images_inner = process_image_inner_hijack
 
-        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+        # if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+        if True:
             # debug only, may delete later
             with open(f'api_{"txt2img" if self.is_txt2img else "img2img"}_param.json', 'w') as f:
                 f.write(js)
