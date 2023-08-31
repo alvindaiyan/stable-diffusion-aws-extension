@@ -6,6 +6,8 @@ INITIAL_SUPPORT_COMMIT_DREAMBOOTH=c2a5617c587b812b5a408143ddfb18fc49234edf
 INITIAL_SUPPORT_COMMIT_REMBG=3d9eedbbf0d585207f97d5b21e42f32c0042df70
 INITIAL_SUPPORT_COMMIT_SAM=5df716be8445e0f358f6e8d4b65a87cc611bfe08
 INITIAL_SUPPORT_COMMIT_TILEDVAE=f9f8073e64f4e682838f255215039ba7884553bf
+INITIAL_SUPPORT_COMMIT_LORA_BLOCK_WEIGHT=3d226913c161032e578d9e122294c6490882f555
+INITIAL_SUPPORT_COMMIT_ULTIMATE_UPSCALE=c99f382b31509b87b4d512e70e9caf08ae7a079f
 
 
 # Clone stable-diffusion-webui
@@ -62,4 +64,17 @@ cd ..
 git clone https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111.git
 cd multidiffusion-upscaler-for-automatic1111
 git reset --hard ${INITIAL_SUPPORT_COMMIT_TILEDVAE}
+cd ..
+
+# Clone sd-webui-lora-block-weight
+git clone https://github.com/hako-mikan/sd-webui-lora-block-weight.git
+cd sd-webui-lora-block-weight
+git reset --hard ${INITIAL_SUPPORT_COMMIT_LORA_BLOCK_WEIGHT}
+cd ..
+
+
+# Clone ultimate-upscale-for-automatic1111
+git clone https://github.com/Coyote-A/ultimate-upscale-for-automatic1111.git
+cd ultimate-upscale-for-automatic1111
+git reset --hard ${INITIAL_SUPPORT_COMMIT_ULTIMATE_UPSCALE}
 cd ..
