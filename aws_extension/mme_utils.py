@@ -11,7 +11,7 @@ except Exception:
     print('default modules load fails')
 
 CN_MODEL_EXTS = [".pt", ".pth", ".ckpt", ".safetensors"]
-models_type_list = ['Stable-diffusion', 'hypernetworks', 'Lora', 'ControlNet', 'embeddings']
+models_type_list = ['Stable-diffusion', 'hypernetworks', 'Lora', 'ControlNet', 'embeddings', 'VAE']
 models_used_count = {key: ModelsRef() for key in models_type_list}
 models_path = {key: None for key in models_type_list}
 models_path['Stable-diffusion'] = 'models/Stable-diffusion'
