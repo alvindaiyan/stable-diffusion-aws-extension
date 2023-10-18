@@ -183,14 +183,24 @@ def run_inference(event, _):
     inference_job.status = 'inprogress'
     inference_job.params['output_path'] = output_path
     ddb_service.put_items(inference_table_name, inference_job.__dict__)
-
+    bucket, s3_file_key = split_s3_path(output_path)
+    from botocore.config import Config
+    config = Config(signature_version='s3v4')
+    import boto3
+    s3 = boto3.client('s3', config=config)
+    s3_presign = s3.generate_presigned_url('get_object',
+                                           Params={'Bucket': bucket,
+                                                   'Key': s3_file_key,
+                                                   },
+                                           ExpiresIn=3600)
     return {
         'statusCode': 200,
         'inference': {
             'inference_id': infer_id,
             'status': inference_job.status,
             'endpoint_name': endpoint_name,
-            'output_path': output_path
+            'output_path': output_path,
+            'output_presign_url': s3_presign,
         }
     }
 

@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 from unittest import TestCase
 
+import requests
+
 os.environ.setdefault('AWS_PROFILE', 'env')
 os.environ.setdefault('S3_BUCKET', 'your-bucket')
 os.environ.setdefault('DATASET_ITEM_TABLE', 'DatasetItemTable')
@@ -168,10 +170,10 @@ class InferenceApiTest(TestCase):
         self._do_generate_extra('extra-single-image', 'payload_extra_single.json')
 
     def test_generate_extra_batch(self):
-        self._do_generate_extra('extra-batch-images', 'payload_extra_batch.json')
+        self._do_generate_extra('extra-batch-images', '/Users/cyanda/Dev/python-projects/stable-diffusion-webui/extensions/stable-diffusion-aws-extension/playground_NO_COMMIT/payload_extra_batch.json')
 
     def test_generate_rembg(self):
-        self._do_generate_extra('rembg', 'payload_rembg.json')
+        self._do_generate_extra('rembg', '/Users/cyanda/Dev/python-projects/stable-diffusion-webui/extensions/stable-diffusion-aws-extension/playground_NO_COMMIT/payload_rembg.json')
 
     def _do_generate_extra(self, _task_type, payload_url):
         from inference_v2.inference_api import prepare_inference, run_inference
@@ -194,12 +196,35 @@ class InferenceApiTest(TestCase):
 
         upload_with_put(resp['inference']['api_params_s3_upload_url'], payload_url)
 
-        resp = run_inference({
-            'pathStringParameters': {
-                'inference_id': resp['inference']['id']
-            }
-        }, {})
-        print(resp)
+        # resp = run_inference({
+        #     'pathStringParameters': {
+        #         'inference_id': resp['inference']['id']
+        #     }
+        # }, {})
+        raw_resp = requests.put(f"https://4dr2cz7jak.execute-api.us-east-1.amazonaws.com/prod/inference/v2/{resp['inference']['id']}/run", headers={
+            "x-api-key": "09876543210987654321"
+        })
+        print(raw_resp)
+        resp = raw_resp.json()
         assert resp['statusCode'] == 200
 
         print(f"result s3 location: {resp['inference']['output_path']}")
+        print(f"result s3 location: {resp['inference']['output_presign_url']}")
+
+    def test_presign_url(self):
+        from common.util import split_s3_path
+        bucket, s3_file_key = split_s3_path('s3://stable-diffusion-aws-exten-1824/sagemaker_output/1c6eef8d-84a3-4e8a-846d-9b02ec88367b.out')
+        from botocore.config import Config
+        import boto3
+        config = Config(signature_version='s3v4')
+        s3 = boto3.client('s3', config=config)
+        s3_presign = s3.generate_presigned_url('get_object',
+                                               Params={'Bucket': bucket,
+                                                       'Key': s3_file_key,
+                                                       },
+                                               ExpiresIn=3600)
+        print(s3_presign)
+        resp = requests.get(s3_presign)
+        print(resp)
+
+
