@@ -1,0 +1,179 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "StableDiffusionPolicyLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:ListTagsLogGroup",
+        "logs:DescribeLogGroups",
+        "logs:CreateLogGroup",
+        "logs:PutRetentionPolicy"
+      ],
+      "Resource": "arn:aws:logs:*:*:log-group:*"
+    },
+    {
+      "Sid": "StableDiffusionPolicyKms",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:DescribeKey",
+        "kms:CreateGrant",
+        "kms:GenerateDataKey",
+        "kms:CreateAlias",
+        "kms:UpdateAlias",
+        "kms:EnableKeyRotation"
+      ],
+      "Resource": [
+        "arn:aws:kms:*:*:key/*",
+        "arn:aws:kms:*:*:alias/sd-extension-password-key"
+      ]
+    },
+    {
+      "Sid": "StableDiffusionOperatorKMSCreateKey",
+      "Effect": "Allow",
+      "Action": [
+        "kms:PutKeyPolicy",
+        "kms:TagResource",
+        "kms:CreateKey"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "StableDiffusionOperatorKMSLambda",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:CreateFunction",
+        "lambda:GetLayerVersion",
+        "lambda:GetRuntimeManagementConfig",
+        "lambda:DeleteFunction",
+        "lambda:InvokeFunction",
+        "lambda:GetFunction",
+        "lambda:GetFunctionCodeSigningConfig",
+        "lambda:AddPermission",
+        "lambda:RemovePermission",
+        "lambda:PublishLayerVersion",
+        "lambda:DeleteLayerVersion"
+      ],
+      "Resource": [
+        "arn:aws:lambda:*:*:layer:*",
+        "arn:aws:lambda:*:*:function:*",
+        "arn:aws:lambda:*:*:layer:*:*"
+      ]
+    },
+
+    {
+      "Sid": "StableDiffusionPolicyDynamodb",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeContributorInsights",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:DeleteTable",
+        "dynamodb:UpdateContinuousBackups",
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:DescribeKinesisStreamingDestination",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:CreateTable"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:*:*:table/CheckpointTable",
+        "arn:aws:dynamodb:*:*:table/CheckpointTable",
+        "arn:aws:dynamodb:*:*:table/DatasetInfoTable",
+        "arn:aws:dynamodb:*:*:table/DatasetItemTable",
+        "arn:aws:dynamodb:*:*:table/ModelTable",
+        "arn:aws:dynamodb:*:*:table/MultiUserTable",
+        "arn:aws:dynamodb:*:*:table/SDEndpointDeploymentJobTable",
+        "arn:aws:dynamodb:*:*:table/SDInferenceJobTable",
+        "arn:aws:dynamodb:*:*:table/TrainingTable"
+      ]
+    },
+    {
+      "Sid": "StableDiffusionPolicyIam",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:AttachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:GetRole",
+        "iam:DeleteRole",
+        "iam:CreateServiceLinkedRole",
+        "iam:GetRolePolicy",
+        "iam:PassRole"
+      ],
+      "Resource": "arn:aws:iam::*:role/*"
+    },
+
+    {
+      "Sid": "StableDiffusionPolicyECR",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:ListTagsForResource",
+        "ecr:DeleteRepository",
+        "ecr:TagResource",
+        "ecr:GetLifecyclePolicy",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:GetRepositoryPolicy",
+        "ecr:DescribeRepositories",
+        "ecr:CreateRepository"
+      ],
+      "Resource": "arn:aws:ecr:*:*:repository/*"
+    },
+
+    {
+      "Sid": "StableDiffusionPolicyEc2",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeNetworkInterfaces"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "StableDiffusionPolicyOthers",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:*",
+        "states:*",
+        "apigateway:*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "StableDiffusionPolicyS3",
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:GetBucketPolicy",
+        "s3:PutBucketTagging",
+        "s3:DeleteBucket",
+        "s3:PutBucketPublicAccessBlock",
+        "s3:PutBucketCORS",
+        "s3:GetObject",
+        "s3:PutBucketPolicy"
+      ],
+      "Resource": [
+        "arn:aws:s3:::sd-webui-*",
+        "arn:aws:s3:::aws-gcr-solutions*"
+      ]
+    },
+    {
+      "Sid": "StableDiffusionPolicySns",
+      "Effect": "Allow",
+      "Action": [
+        "sns:*"
+      ],
+      "Resource": [
+        "arn:aws:sns:*:*:failureCreateModel",
+        "arn:aws:sns:*:*:ReceiveSageMakerInferenceError",
+        "arn:aws:sns:*:*:ReceiveSageMakerInferenceSuccess",
+        "arn:aws:sns:*:*:StableDiffusionSnsUserTopic",
+        "arn:aws:sns:*:*:failureCreateModel",
+        "arn:aws:sns:*:*:successCreateModel"
+      ]
+    }
+  ]
+}

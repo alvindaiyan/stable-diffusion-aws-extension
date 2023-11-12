@@ -1,0 +1,85 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "StableDiffusionUserDDB",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:*"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:*:*:table/CheckpointTable",
+        "arn:aws:dynamodb:*:*:table/CheckpointTable",
+        "arn:aws:dynamodb:*:*:table/DatasetInfoTable",
+        "arn:aws:dynamodb:*:*:table/DatasetItemTable",
+        "arn:aws:dynamodb:*:*:table/ModelTable",
+        "arn:aws:dynamodb:*:*:table/MultiUserTable",
+        "arn:aws:dynamodb:*:*:table/SDEndpointDeploymentJobTable",
+        "arn:aws:dynamodb:*:*:table/SDInferenceJobTable",
+        "arn:aws:dynamodb:*:*:table/TrainingTable"
+      ]
+    },
+    {
+      "Sid": "StableDiffusionUserS3",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": "arn:aws:s3:::sd-webui-*"
+    },
+    {
+      "Sid": "StableDiffusionUserSNS",
+      "Effect": "Allow",
+      "Action": [
+        "sns:*"
+      ],
+      "Resource": [
+        "arn:aws:sns:*:*:failureCreateModel",
+        "arn:aws:sns:*:*:ReceiveSageMakerInferenceError",
+        "arn:aws:sns:*:*:ReceiveSageMakerInferenceSuccess",
+        "arn:aws:sns:*:*:StableDiffusionSnsUserTopic",
+        "arn:aws:sns:*:*:failureCreateModel",
+        "arn:aws:sns:*:*:successCreateModel"
+      ]
+    },
+    {
+      "Sid": "StableDiffusionUserKms",
+      "Effect": "Allow",
+      "Action": [
+        "kms:ListAliases",
+        "kms:DeleteAlias",
+        "kms:CreateAlias"
+      ],
+      "Resource": "arn:aws:kms:*:*:alias/sd-extension-password-key"
+    },
+    {
+      "Sid": "StableDiffusionUserIamRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:*"
+      ],
+      "Resource": "arn:aws:iam::*:role/LambdaStartDeployRole"
+    },
+    {
+      "Sid": "StableDiffusionUserPassRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": "arn:aws:iam::*:role/StableDiffusionCfnRole"
+    },
+    {
+      "Sid": "StableDiffusionUserCloudFormation",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:GetTemplateSummary",
+        "cloudformation:ListStacks",
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:DeleteStack"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
